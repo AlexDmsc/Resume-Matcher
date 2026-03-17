@@ -11,29 +11,29 @@ interface AdditionalFormProps {
   onChange: (data: AdditionalInfo) => void;
 }
 
+const formatArray = (arr?: string[]) => arr?.join('\n') || '';
+
 export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }) => {
   const { t } = useTranslations();
 
-  // Helper to handle array conversions (text -> string[])
-  const handleArrayChange = (field: keyof AdditionalInfo, value: string) => {
-    // Split by newlines only (preserving spaces within items)
+  // Local text state preserves trailing newlines so cursor doesn't jump when pressing Enter.
+  // Controlled value derived from the array would strip the trailing newline on every
+  // onChange, resetting the cursor position back before the new line.
+  const [text, setText] = React.useState({
+    technicalSkills: formatArray(data.technicalSkills),
+    languages: formatArray(data.languages),
+    certificationsTraining: formatArray(data.certificationsTraining),
+    awards: formatArray(data.awards),
+  });
+
+  const handleChange = (field: keyof typeof text, value: string) => {
+    setText((prev) => ({ ...prev, [field]: value }));
     const items = value.split('\n').filter((item) => item.trim() !== '');
-    onChange({
-      ...data,
-      [field]: items,
-    });
+    onChange({ ...data, [field]: items });
   };
 
-  const formatArray = (arr?: string[]) => {
-    return arr?.join('\n') || '';
-  };
-
-  // Explicitly allow Enter key to create newlines (prevent form submission interference)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter') {
-      // Allow default behavior (newline insertion)
-      e.stopPropagation();
-    }
+    if (e.key === 'Enter') e.stopPropagation();
   };
 
   return (
@@ -52,8 +52,8 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
           </Label>
           <Textarea
             id="technicalSkills"
-            value={formatArray(data.technicalSkills)}
-            onChange={(e) => handleArrayChange('technicalSkills', e.target.value)}
+            value={text.technicalSkills}
+            onChange={(e) => handleChange('technicalSkills', e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t('builder.additionalForm.placeholders.technicalSkills')}
             className="min-h-[120px] text-black rounded-none border-black bg-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-700"
@@ -68,8 +68,8 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
           </Label>
           <Textarea
             id="languages"
-            value={formatArray(data.languages)}
-            onChange={(e) => handleArrayChange('languages', e.target.value)}
+            value={text.languages}
+            onChange={(e) => handleChange('languages', e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t('builder.additionalForm.placeholders.languages')}
             className="min-h-[120px] text-black rounded-none border-black bg-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-700"
@@ -84,8 +84,8 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
           </Label>
           <Textarea
             id="certifications"
-            value={formatArray(data.certificationsTraining)}
-            onChange={(e) => handleArrayChange('certificationsTraining', e.target.value)}
+            value={text.certificationsTraining}
+            onChange={(e) => handleChange('certificationsTraining', e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t('builder.additionalForm.placeholders.certifications')}
             className="min-h-[120px] text-black rounded-none border-black bg-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-700"
@@ -100,8 +100,8 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
           </Label>
           <Textarea
             id="awards"
-            value={formatArray(data.awards)}
-            onChange={(e) => handleArrayChange('awards', e.target.value)}
+            value={text.awards}
+            onChange={(e) => handleChange('awards', e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t('builder.additionalForm.placeholders.awards')}
             className="min-h-[120px] text-black rounded-none border-black bg-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-700"

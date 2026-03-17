@@ -390,7 +390,13 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
                 >
                   {headingFallbacks.languages}
                 </h3>
-                <p className={baseStyles['resume-text-xs']}>{additional.languages.join(' • ')}</p>
+                <ul className={baseStyles['resume-list']}>
+                  {additional.languages.map((lang, index) => (
+                    <li key={index} className={baseStyles['resume-text-xs']}>
+                      {lang}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 
