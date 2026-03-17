@@ -22,7 +22,7 @@ import { DiffPreviewModal } from '@/components/tailor/diff-preview-modal';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 export default function TailorPage() {
-  const { t } = useTranslations();
+  const { t, locale: uiLanguage } = useTranslations();
   const [jobDescription, setJobDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -121,6 +121,7 @@ export default function TailorPage() {
           suggestion: item.suggestion,
           lineNumber: typeof item.lineNumber === 'number' ? item.lineNumber : null,
         })) ?? [],
+      lang: uiLanguage,
     };
   };
 
@@ -154,7 +155,7 @@ export default function TailorPage() {
       incrementJobs(); // Update cached counter
 
       // 2. Preview Resume
-      const result = await previewImproveResume(resumeId, jobId, selectedPromptId);
+      const result = await previewImproveResume(resumeId, jobId, selectedPromptId, uiLanguage);
 
       if (!result?.data?.diff_summary || !result?.data?.detailed_changes) {
         console.warn('Diff data missing for tailor preview; requesting user confirmation.');

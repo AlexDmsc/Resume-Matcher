@@ -703,7 +703,7 @@ async def improve_resume_preview_endpoint(
     if not job:
         raise HTTPException(status_code=404, detail="Job description not found")
 
-    language = _get_content_language()
+    language = request.lang or _get_content_language()
     prompt_id = request.prompt_id or _get_default_prompt_id()
 
     stage = "load_job_keywords"
@@ -924,7 +924,7 @@ async def improve_resume_confirm_endpoint(
     feature_config = _load_feature_config()
     enable_cover_letter = feature_config.get("enable_cover_letter", False)
     enable_outreach = feature_config.get("enable_outreach_message", False)
-    language = _get_content_language()
+    language = request.lang or _get_content_language()
 
     stage = "serialize_improved_data"
     detail = "Failed to confirm resume. Please try again."

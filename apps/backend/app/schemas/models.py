@@ -442,6 +442,7 @@ class ImproveResumeRequest(BaseModel):
     resume_id: str
     job_id: str
     prompt_id: str | None = None
+    lang: str | None = None
 
 
 class ImprovementSuggestion(BaseModel):
@@ -548,6 +549,7 @@ class ImproveResumeConfirmRequest(BaseModel):
     job_id: str
     improved_data: ResumeData
     improvements: list[ImprovementSuggestion]
+    lang: str | None = None
 
 
 # Config Models

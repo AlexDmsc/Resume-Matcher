@@ -85,6 +85,7 @@ interface ImproveResumeConfirmRequest {
     suggestion: string;
     lineNumber?: number | null;
   }>;
+  lang?: string | null;
 }
 
 function normalizeResumeId(resumeId: string): string {
@@ -165,12 +166,14 @@ export async function improveResume(
 export async function previewImproveResume(
   resumeId: string,
   jobId: string,
-  promptId?: string
+  promptId?: string,
+  lang?: string
 ): Promise<ImprovedResult> {
   return postImprove('/resumes/improve/preview', {
     resume_id: resumeId,
     job_id: jobId,
     prompt_id: promptId ?? null,
+    lang: lang ?? null,
   });
 }
 
