@@ -22,6 +22,7 @@ import { useTranslations } from '@/lib/i18n';
 import { withLocalizedDefaultSections } from '@/lib/utils/section-helpers';
 import { useLanguage } from '@/lib/context/language-context';
 import { downloadBlobAsFile, openUrlInNewTab, sanitizeFilename } from '@/lib/utils/download';
+import { type TemplateSettings, DEFAULT_TEMPLATE_SETTINGS } from '@/lib/types/template-settings';
 
 type ProcessingStatus = 'pending' | 'processing' | 'ready' | 'failed';
 
@@ -48,11 +49,26 @@ export default function ResumeViewerPage() {
   const [jobId, setJobId] = useState<string | null>(null);
 
   const resumeId = params?.id as string;
+  const [templateSettings, setTemplateSettings] = useState<TemplateSettings>(DEFAULT_TEMPLATE_SETTINGS);
 
   const localizedResumeData = useMemo(() => {
     if (!resumeData) return null;
     return withLocalizedDefaultSections(resumeData, t);
   }, [resumeData, t]);
+
+  // Load per-resume template settings from localStorage
+  useEffect(() => {
+    if (!resumeId) return;
+    const saved = localStorage.getItem(`resume_builder_settings_${resumeId}`);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setTemplateSettings({ ...DEFAULT_TEMPLATE_SETTINGS, ...parsed });
+      } catch {
+        // use defaults
+      }
+    }
+  }, [resumeId]);
 
   useEffect(() => {
     if (!resumeId) return;
@@ -369,6 +385,7 @@ export default function ResumeViewerPage() {
           <div className="resume-print w-full max-w-[250mm] shadow-[8px_8px_0px_0px_#000000] border-2 border-black bg-white">
             <Resume
               resumeData={localizedResumeData || resumeData}
+              settings={templateSettings}
               additionalSectionLabels={{
                 technicalSkills: t('resume.additionalLabels.technicalSkills'),
                 languages: t('resume.additionalLabels.languages'),

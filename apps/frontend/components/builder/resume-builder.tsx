@@ -58,6 +58,8 @@ type TabId = 'resume' | 'cover-letter' | 'outreach' | 'jd-match';
 
 const STORAGE_KEY = 'resume_builder_draft';
 const SETTINGS_STORAGE_KEY = 'resume_builder_settings';
+const settingsKey = (resumeId: string | null) =>
+  resumeId ? `resume_builder_settings_${resumeId}` : SETTINGS_STORAGE_KEY;
 
 type Translate = (key: string, params?: Record<string, string | number>) => string;
 
@@ -249,9 +251,9 @@ const ResumeBuilderContent = () => {
     [resumeData, t]
   );
 
-  // Load template settings from localStorage on mount
+  // Load template settings from localStorage on mount (per-resume key)
   useEffect(() => {
-    const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    const savedSettings = localStorage.getItem(settingsKey(resumeId));
     if (savedSettings) {
       try {
         const parsed = JSON.parse(savedSettings);
@@ -266,12 +268,12 @@ const ResumeBuilderContent = () => {
         // Use defaults
       }
     }
-  }, []);
+  }, [resumeId]);
 
-  // Save template settings to localStorage when they change
+  // Save template settings to localStorage when they change (per-resume key)
   useEffect(() => {
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(templateSettings));
-  }, [templateSettings]);
+    localStorage.setItem(settingsKey(resumeId), JSON.stringify(templateSettings));
+  }, [templateSettings, resumeId]);
 
   // Warn user before leaving with unsaved changes
   useEffect(() => {

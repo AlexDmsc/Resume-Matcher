@@ -1380,6 +1380,18 @@ async def download_resume_pdf(
     return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
 
 
+@router.post("/{resume_id}/set-master")
+async def set_master_resume(resume_id: str) -> dict:
+    """Promote a resume to master (base resume)."""
+    if not db.get_resume(resume_id):
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    if not db.set_master_resume(resume_id):
+        raise HTTPException(status_code=500, detail="Failed to set master resume.")
+
+    return {"message": "Master resume updated successfully"}
+
+
 @router.delete("/{resume_id}")
 async def delete_resume(resume_id: str) -> dict:
     """Delete a resume by ID."""
