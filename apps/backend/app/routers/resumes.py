@@ -703,7 +703,7 @@ async def improve_resume_preview_endpoint(
     if not job:
         raise HTTPException(status_code=404, detail="Job description not found")
 
-    language = _get_content_language()
+    language = request.lang or _get_content_language()
     prompt_id = request.prompt_id or _get_default_prompt_id()
 
     stage = "load_job_keywords"
@@ -924,7 +924,7 @@ async def improve_resume_confirm_endpoint(
     feature_config = _load_feature_config()
     enable_cover_letter = feature_config.get("enable_cover_letter", False)
     enable_outreach = feature_config.get("enable_outreach_message", False)
-    language = _get_content_language()
+    language = request.lang or _get_content_language()
 
     stage = "serialize_improved_data"
     detail = "Failed to confirm resume. Please try again."
@@ -1380,6 +1380,18 @@ async def download_resume_pdf(
     return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
 
 
+@router.post("/{resume_id}/set-master")
+async def set_master_resume(resume_id: str) -> dict:
+    """Promote a resume to master (base resume)."""
+    if not db.get_resume(resume_id):
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    if not db.set_master_resume(resume_id):
+        raise HTTPException(status_code=500, detail="Failed to set master resume.")
+
+    return {"message": "Master resume updated successfully"}
+
+
 @router.delete("/{resume_id}")
 async def delete_resume(resume_id: str) -> dict:
     """Delete a resume by ID."""
@@ -1663,6 +1675,24 @@ async def get_job_description_for_resume(resume_id: str) -> dict:
         "job_id": job["job_id"],
         "content": job["content"],
     }
+
+
+@router.get("/{resume_id}/ats-result")
+async def get_ats_result(resume_id: str) -> dict:
+    """Get the stored ATS analysis result for a tailored resume.
+
+    Returns the last ATS analysis that was run and saved for this resume.
+    Returns 404 if no analysis has been run yet.
+    """
+    resume = db.get_resume(resume_id)
+    if not resume:
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    ats_result = resume.get("ats_result")
+    if not ats_result:
+        raise HTTPException(status_code=404, detail="No ATS analysis found for this resume")
+
+    return ats_result
 
 
 @router.get("/{resume_id}/cover-letter/pdf")

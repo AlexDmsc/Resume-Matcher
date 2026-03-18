@@ -12,7 +12,9 @@ import {
   deleteResume,
   retryProcessing,
   renameResume,
+  fetchJobDescription,
 } from '@/lib/api/resume';
+import { ATSScorePanel } from '@/components/tailor/ats-score-panel';
 import { useStatusCache } from '@/lib/context/status-cache';
 import { ArrowLeft, Edit, Download, Loader2, AlertCircle, Sparkles, Pencil } from 'lucide-react';
 import { EnrichmentModal } from '@/components/enrichment/enrichment-modal';
@@ -20,6 +22,7 @@ import { useTranslations } from '@/lib/i18n';
 import { withLocalizedDefaultSections } from '@/lib/utils/section-helpers';
 import { useLanguage } from '@/lib/context/language-context';
 import { downloadBlobAsFile, openUrlInNewTab, sanitizeFilename } from '@/lib/utils/download';
+import { type TemplateSettings, DEFAULT_TEMPLATE_SETTINGS } from '@/lib/types/template-settings';
 
 type ProcessingStatus = 'pending' | 'processing' | 'ready' | 'failed';
 
@@ -28,7 +31,7 @@ export default function ResumeViewerPage() {
   const { uiLanguage } = useLanguage();
   const params = useParams();
   const router = useRouter();
-  const { decrementResumes, setHasMasterResume } = useStatusCache();
+  const { decrementResumes, setHasMasterResume, status: systemStatus } = useStatusCache();
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,13 +46,29 @@ export default function ResumeViewerPage() {
   const [resumeTitle, setResumeTitle] = useState<string | null>(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingTitleValue, setEditingTitleValue] = useState('');
+  const [jobId, setJobId] = useState<string | null>(null);
 
   const resumeId = params?.id as string;
+  const [templateSettings, setTemplateSettings] = useState<TemplateSettings>(DEFAULT_TEMPLATE_SETTINGS);
 
   const localizedResumeData = useMemo(() => {
     if (!resumeData) return null;
     return withLocalizedDefaultSections(resumeData, t);
   }, [resumeData, t]);
+
+  // Load per-resume template settings from localStorage
+  useEffect(() => {
+    if (!resumeId) return;
+    const saved = localStorage.getItem(`resume_builder_settings_${resumeId}`);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setTemplateSettings({ ...DEFAULT_TEMPLATE_SETTINGS, ...parsed });
+      } catch {
+        // use defaults
+      }
+    }
+  }, [resumeId]);
 
   useEffect(() => {
     if (!resumeId) return;
@@ -95,7 +114,15 @@ export default function ResumeViewerPage() {
     };
 
     loadResume();
-    setIsMasterResume(localStorage.getItem('master_resume_id') === resumeId);
+    const isMaster = localStorage.getItem('master_resume_id') === resumeId;
+    setIsMasterResume(isMaster);
+    if (!isMaster) {
+      fetchJobDescription(resumeId)
+        .then((jd) => setJobId(jd.job_id))
+        .catch(() => {
+          // Job description not found — ATS panel won't show
+        });
+    }
   }, [resumeId, t]);
 
   const handleRetryProcessing = async () => {
@@ -342,11 +369,23 @@ export default function ResumeViewerPage() {
           </div>
         )}
 
+        {/* ATS Score Panel — tailored resumes only */}
+        {!isMasterResume && jobId && (
+          <div className="mb-6 no-print">
+            <ATSScorePanel
+              resumeId={resumeId}
+              jobId={jobId}
+              isLlmConfigured={!!systemStatus?.llm_configured}
+            />
+          </div>
+        )}
+
         {/* Resume Viewer */}
         <div className="flex justify-center pb-4">
           <div className="resume-print w-full max-w-[250mm] shadow-[8px_8px_0px_0px_#000000] border-2 border-black bg-white">
             <Resume
               resumeData={localizedResumeData || resumeData}
+              settings={templateSettings}
               additionalSectionLabels={{
                 technicalSkills: t('resume.additionalLabels.technicalSkills'),
                 languages: t('resume.additionalLabels.languages'),

@@ -85,6 +85,7 @@ interface ImproveResumeConfirmRequest {
     suggestion: string;
     lineNumber?: number | null;
   }>;
+  lang?: string | null;
 }
 
 function normalizeResumeId(resumeId: string): string {
@@ -165,12 +166,14 @@ export async function improveResume(
 export async function previewImproveResume(
   resumeId: string,
   jobId: string,
-  promptId?: string
+  promptId?: string,
+  lang?: string
 ): Promise<ImprovedResult> {
   return postImprove('/resumes/improve/preview', {
     resume_id: resumeId,
     job_id: jobId,
     prompt_id: promptId ?? null,
+    lang: lang ?? null,
   });
 }
 
@@ -359,6 +362,44 @@ export async function retryProcessing(resumeId: string): Promise<ResumeUploadRes
   if (!res.ok) {
     const text = await res.text().catch(() => '');
     throw new Error(`Failed to retry processing (status ${res.status}): ${text}`);
+  }
+  return res.json();
+}
+
+// ATS Analysis types (mirrors backend schemas/ats.py)
+export interface ATSKeywordResult {
+  keyword: string;
+  category: 'required' | 'preferred' | 'action_verb' | 'soft_skill' | 'technical';
+  found: boolean;
+}
+
+export interface ATSPriorityAction {
+  priority: number;
+  action: string;
+  impact: 'critical' | 'high' | 'medium';
+}
+
+export interface ATSAnalysisResult {
+  score: number;
+  keywords: ATSKeywordResult[];
+  priority_actions: ATSPriorityAction[];
+  analysis_language: string;
+}
+
+/** Fetches the stored ATS analysis result for a resume (returns null if none exists) */
+export async function fetchStoredATSResult(resumeId: string): Promise<ATSAnalysisResult | null> {
+  const res = await apiFetch(`/resumes/${encodeURIComponent(resumeId)}/ats-result`);
+  if (res.status === 404) return null;
+  if (!res.ok) return null;
+  return res.json();
+}
+
+/** Runs AI-powered ATS analysis of a resume against a job description */
+export async function analyzeATS(resumeId: string, jobId: string): Promise<ATSAnalysisResult> {
+  const res = await apiPost('/jobs/ats-analysis', { resume_id: resumeId, job_id: jobId }, 60_000);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`ATS analysis failed with status ${res.status}: ${text}`);
   }
   return res.json();
 }

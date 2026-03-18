@@ -6,7 +6,7 @@
 
 - UI uses `next-intl` with locale files in `messages/`
 - Content language preference stored via `LanguageProvider`
-- Supported: en, es, zh, ja
+- Supported: en, es, zh, ja, fr
 
 ## Translation File Location
 
@@ -23,7 +23,7 @@ apps/frontend/messages/
 1. Create `messages/{locale}.json`
 2. Add locale to `i18n/config.ts`:
    ```typescript
-   export const locales = ['en', 'es', 'zh', 'ja', 'de'] as const;
+   export const locales = ['en', 'es', 'zh', 'ja', 'de', 'fr'] as const;
    ```
 3. Add to `SUPPORTED_LANGUAGES` in backend `config.py`
 

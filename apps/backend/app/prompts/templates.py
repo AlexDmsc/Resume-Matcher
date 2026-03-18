@@ -4,6 +4,7 @@
 LANGUAGE_NAMES = {
     "en": "English",
     "es": "Spanish",
+    "fr": "French",
     "zh": "Chinese (Simplified)",
     "ja": "Japanese",
     "pt": "Brazilian Portuguese",

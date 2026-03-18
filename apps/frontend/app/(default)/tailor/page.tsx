@@ -20,13 +20,15 @@ import { Loader2, ArrowLeft, AlertTriangle, Settings } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n';
 import { DiffPreviewModal } from '@/components/tailor/diff-preview-modal';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { ATSScorePanel } from '@/components/tailor/ats-score-panel';
 
 export default function TailorPage() {
-  const { t } = useTranslations();
+  const { t, locale: uiLanguage } = useTranslations();
   const [jobDescription, setJobDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [masterResumeId, setMasterResumeId] = useState<string | null>(null);
+  const [uploadedJobId, setUploadedJobId] = useState<string | null>(null);
   const [promptOptions, setPromptOptions] = useState<PromptOption[]>([]);
   const [selectedPromptId, setSelectedPromptId] = useState('keywords');
   const [promptLoading, setPromptLoading] = useState(false);
@@ -121,6 +123,7 @@ export default function TailorPage() {
           suggestion: item.suggestion,
           lineNumber: typeof item.lineNumber === 'number' ? item.lineNumber : null,
         })) ?? [],
+      lang: uiLanguage,
     };
   };
 
@@ -148,13 +151,16 @@ export default function TailorPage() {
 
   const runGenerate = async (resumeId: string, description: string) => {
     try {
-      // 1. Upload Job Description
-      // The API expects an array of strings
-      const jobId = await uploadJobDescriptions([description], resumeId);
-      incrementJobs(); // Update cached counter
+      // 1. Upload Job Description (reuse existing jobId if ATS analysis already uploaded it)
+      let jobId = uploadedJobId;
+      if (!jobId) {
+        jobId = await uploadJobDescriptions([description], resumeId);
+        incrementJobs(); // Update cached counter
+        setUploadedJobId(jobId);
+      }
 
       // 2. Preview Resume
-      const result = await previewImproveResume(resumeId, jobId, selectedPromptId);
+      const result = await previewImproveResume(resumeId, jobId, selectedPromptId, uiLanguage);
 
       if (!result?.data?.diff_summary || !result?.data?.detailed_changes) {
         console.warn('Diff data missing for tailor preview; requesting user confirmation.');
@@ -276,6 +282,15 @@ export default function TailorPage() {
     }
   };
 
+  const handleUploadForATS = async (): Promise<string | null> => {
+    if (!masterResumeId || !jobDescription.trim()) return null;
+    if (uploadedJobId) return uploadedJobId;
+    const jobId = await uploadJobDescriptions([jobDescription.trim()], masterResumeId);
+    incrementJobs();
+    setUploadedJobId(jobId);
+    return jobId;
+  };
+
   const handleRegenerateConfirm = async () => {
     setShowRegenerateDialog(false);
     const trimmedDescription = jobDescription.trim();
@@ -389,7 +404,10 @@ export default function TailorPage() {
               placeholder={t('tailor.jobDescriptionPlaceholder')}
               className="min-h-[300px] font-mono text-sm bg-[#F0F0E8] border-2 border-black focus:ring-0 focus:border-blue-700 resize-none p-4 rounded-none"
               value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
+              onChange={(e) => {
+                setJobDescription(e.target.value);
+                setUploadedJobId(null); // Reset on JD change
+              }}
               onKeyDown={handleTextareaKeyDown}
               disabled={isLoading}
             />
@@ -397,6 +415,17 @@ export default function TailorPage() {
               {t('tailor.charactersCount', { count: jobDescription.length })}
             </div>
           </div>
+
+          {/* ATS Score Panel — shown when JD is long enough */}
+          {masterResumeId && jobDescription.trim().length >= 50 && (
+            <ATSScorePanel
+              resumeId={masterResumeId}
+              jobId={uploadedJobId}
+              onGetJobId={handleUploadForATS}
+              fallbackJobDescription={jobDescription}
+              isLlmConfigured={!!isLlmConfigured}
+            />
+          )}
 
           {error && (
             <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-mono flex items-center gap-2">
