@@ -4,6 +4,8 @@ from fastapi import APIRouter, HTTPException
 
 from app.database import db
 from app.schemas import JobUploadRequest, JobUploadResponse
+from app.schemas.ats import ATSAnalysisRequest, ATSAnalysisResult
+from app.services.ats_analyzer import analyze_ats
 
 router = APIRouter(prefix="/jobs", tags=["Jobs"])
 
@@ -37,6 +39,20 @@ async def upload_job_descriptions(request: JobUploadRequest) -> JobUploadRespons
             "resume_id": request.resume_id,
         },
     )
+
+
+@router.post("/ats-analysis", response_model=ATSAnalysisResult)
+async def ats_analysis(request: ATSAnalysisRequest) -> ATSAnalysisResult:
+    """Analyze a resume against a job description for ATS compatibility.
+
+    Returns an ATS score (0-100), keyword match breakdown, and priority actions.
+    """
+    try:
+        return await analyze_ats(request.resume_id, request.job_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/{job_id}")

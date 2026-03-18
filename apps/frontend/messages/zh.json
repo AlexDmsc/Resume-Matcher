@@ -811,6 +811,41 @@
       "emptyDescription": "请在设置中启用外联消息生成，然后完成一次简历定制。"
     }
   },
+  "ats": {
+    "title": "ATS评分",
+    "analyzeButton": "ATS分析",
+    "reanalyzeButton": "重新分析",
+    "analyzeDescription": "AI分析您的简历与职位描述的匹配度",
+    "noLlmMessage": "请配置API密钥以启用AI分析",
+    "fallbackLabel": "关键词匹配",
+    "analyzing": "正在分析ATS兼容性...",
+    "keywordMatch": "关键词匹配",
+    "keywords": "关键词",
+    "matched": "已匹配",
+    "present": "已包含",
+    "missing": "缺失",
+    "priorityActions": "优先行动",
+    "scoreGood": "匹配极佳 — 很可能通过ATS筛选",
+    "scoreOk": "匹配良好 — 建议少量改进",
+    "scoreLow": "匹配较低 — 需要大幅改进（目标 >80%）",
+    "categories": {
+      "required": "必需",
+      "preferred": "优先",
+      "technical": "技术",
+      "actionVerb": "动作词",
+      "softSkill": "软技能"
+    },
+    "impact": {
+      "critical": "关键",
+      "high": "高",
+      "medium": "中"
+    },
+    "errors": {
+      "analysisFailedRetry": "ATS分析失败，请重试。",
+      "noJobId": "未关联职位描述，请先上传职位描述。",
+      "uploadFailed": "职位描述上传失败。"
+    }
+  },
   "errors": {
     "generic": "出了点问题，请重试。",
     "networkError": "网络错误，请检查您的连接。",

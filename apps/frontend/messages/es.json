@@ -811,6 +811,41 @@
       "emptyDescription": "Activa la generación de mensajes en Ajustes y luego adapta un currículum."
     }
   },
+  "ats": {
+    "title": "Puntuación ATS",
+    "analyzeButton": "Analizar ATS",
+    "reanalyzeButton": "Re-analizar",
+    "analyzeDescription": "Análisis IA de tu CV frente a la oferta de empleo",
+    "noLlmMessage": "Configura una clave API para activar el análisis IA",
+    "fallbackLabel": "coincidencia de palabras clave",
+    "analyzing": "Analizando compatibilidad ATS...",
+    "keywordMatch": "Coincidencia de palabras clave",
+    "keywords": "Palabras clave",
+    "matched": "encontradas",
+    "present": "Presentes",
+    "missing": "Ausentes",
+    "priorityActions": "Acciones prioritarias",
+    "scoreGood": "Excelente coincidencia — debería pasar los filtros ATS",
+    "scoreOk": "Buena coincidencia — se recomiendan pequeñas mejoras",
+    "scoreLow": "Baja coincidencia — se necesitan mejoras significativas (objetivo >80%)",
+    "categories": {
+      "required": "Requerida",
+      "preferred": "Preferida",
+      "technical": "Técnica",
+      "actionVerb": "Verbo de acción",
+      "softSkill": "Habilidad blanda"
+    },
+    "impact": {
+      "critical": "Crítico",
+      "high": "Alto",
+      "medium": "Medio"
+    },
+    "errors": {
+      "analysisFailedRetry": "El análisis ATS falló. Por favor, inténtalo de nuevo.",
+      "noJobId": "No hay oferta de empleo vinculada. Sube una oferta primero.",
+      "uploadFailed": "Error al subir la oferta de empleo."
+    }
+  },
   "errors": {
     "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
     "networkError": "Error de red. Por favor, verifica tu conexión.",

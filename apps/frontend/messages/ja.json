@@ -811,6 +811,41 @@
       "emptyDescription": "設定で外連絡メッセージ生成を有効にしてから、履歴書をカスタマイズしてください。"
     }
   },
+  "ats": {
+    "title": "ATSスコア",
+    "analyzeButton": "ATS分析",
+    "reanalyzeButton": "再分析",
+    "analyzeDescription": "求人票に対するAI履歴書分析",
+    "noLlmMessage": "AI分析を有効にするにはAPIキーを設定してください",
+    "fallbackLabel": "キーワード一致",
+    "analyzing": "ATS適合性を分析中...",
+    "keywordMatch": "キーワード一致",
+    "keywords": "キーワード",
+    "matched": "一致",
+    "present": "一致あり",
+    "missing": "不足",
+    "priorityActions": "優先アクション",
+    "scoreGood": "優秀なマッチ — ATSフィルターを通過する可能性が高い",
+    "scoreOk": "良好なマッチ — 軽微な改善を推奨",
+    "scoreLow": "低いマッチ — 大幅な改善が必要（目標：80%以上）",
+    "categories": {
+      "required": "必須",
+      "preferred": "優遇",
+      "technical": "技術",
+      "actionVerb": "動作動詞",
+      "softSkill": "ソフトスキル"
+    },
+    "impact": {
+      "critical": "重大",
+      "high": "高",
+      "medium": "中"
+    },
+    "errors": {
+      "analysisFailedRetry": "ATS分析に失敗しました。もう一度お試しください。",
+      "noJobId": "求人票が紐付けられていません。先に求人票をアップロードしてください。",
+      "uploadFailed": "求人票のアップロードに失敗しました。"
+    }
+  },
   "errors": {
     "generic": "エラーが発生しました。もう一度お試しください。",
     "networkError": "ネットワークエラー。接続を確認してください。",

@@ -811,6 +811,41 @@
       "emptyDescription": "Habilite a geração de mensagem de contato em Configurações, depois personalize um currículo."
     }
   },
+  "ats": {
+    "title": "Pontuação ATS",
+    "analyzeButton": "Analisar ATS",
+    "reanalyzeButton": "Re-analisar",
+    "analyzeDescription": "Análise de IA do seu currículo vs. a vaga",
+    "noLlmMessage": "Configure uma chave de API para ativar a análise de IA",
+    "fallbackLabel": "correspondência de palavras-chave",
+    "analyzing": "Analisando compatibilidade ATS...",
+    "keywordMatch": "Correspondência de palavras-chave",
+    "keywords": "Palavras-chave",
+    "matched": "encontradas",
+    "present": "Presentes",
+    "missing": "Ausentes",
+    "priorityActions": "Ações prioritárias",
+    "scoreGood": "Excelente correspondência — deve passar pelos filtros ATS",
+    "scoreOk": "Boa correspondência — pequenas melhorias recomendadas",
+    "scoreLow": "Baixa correspondência — melhorias significativas necessárias (meta >80%)",
+    "categories": {
+      "required": "Obrigatória",
+      "preferred": "Preferencial",
+      "technical": "Técnica",
+      "actionVerb": "Verbo de ação",
+      "softSkill": "Habilidade interpessoal"
+    },
+    "impact": {
+      "critical": "Crítico",
+      "high": "Alto",
+      "medium": "Médio"
+    },
+    "errors": {
+      "analysisFailedRetry": "A análise ATS falhou. Por favor, tente novamente.",
+      "noJobId": "Nenhuma vaga vinculada. Por favor, envie uma descrição de vaga primeiro.",
+      "uploadFailed": "Falha ao enviar a descrição da vaga."
+    }
+  },
   "errors": {
     "generic": "Algo deu errado. Por favor, tente novamente.",
     "networkError": "Erro de rede. Por favor, verifique sua conexão.",

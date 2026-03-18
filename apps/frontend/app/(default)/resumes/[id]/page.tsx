@@ -12,7 +12,9 @@ import {
   deleteResume,
   retryProcessing,
   renameResume,
+  fetchJobDescription,
 } from '@/lib/api/resume';
+import { ATSScorePanel } from '@/components/tailor/ats-score-panel';
 import { useStatusCache } from '@/lib/context/status-cache';
 import { ArrowLeft, Edit, Download, Loader2, AlertCircle, Sparkles, Pencil } from 'lucide-react';
 import { EnrichmentModal } from '@/components/enrichment/enrichment-modal';
@@ -28,7 +30,7 @@ export default function ResumeViewerPage() {
   const { uiLanguage } = useLanguage();
   const params = useParams();
   const router = useRouter();
-  const { decrementResumes, setHasMasterResume } = useStatusCache();
+  const { decrementResumes, setHasMasterResume, status: systemStatus } = useStatusCache();
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +45,7 @@ export default function ResumeViewerPage() {
   const [resumeTitle, setResumeTitle] = useState<string | null>(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingTitleValue, setEditingTitleValue] = useState('');
+  const [jobId, setJobId] = useState<string | null>(null);
 
   const resumeId = params?.id as string;
 
@@ -95,7 +98,15 @@ export default function ResumeViewerPage() {
     };
 
     loadResume();
-    setIsMasterResume(localStorage.getItem('master_resume_id') === resumeId);
+    const isMaster = localStorage.getItem('master_resume_id') === resumeId;
+    setIsMasterResume(isMaster);
+    if (!isMaster) {
+      fetchJobDescription(resumeId)
+        .then((jd) => setJobId(jd.job_id))
+        .catch(() => {
+          // Job description not found — ATS panel won't show
+        });
+    }
   }, [resumeId, t]);
 
   const handleRetryProcessing = async () => {
@@ -339,6 +350,17 @@ export default function ResumeViewerPage() {
                 />
               </button>
             )}
+          </div>
+        )}
+
+        {/* ATS Score Panel — tailored resumes only */}
+        {!isMasterResume && jobId && (
+          <div className="mb-6 no-print">
+            <ATSScorePanel
+              resumeId={resumeId}
+              jobId={jobId}
+              isLlmConfigured={!!systemStatus?.llm_configured}
+            />
           </div>
         )}
 

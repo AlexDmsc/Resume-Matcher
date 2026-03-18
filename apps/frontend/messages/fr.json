@@ -811,6 +811,41 @@
       "emptyDescription": "Activez la génération de message de prospection dans les paramètres, puis adaptez un CV."
     }
   },
+  "ats": {
+    "title": "Score ATS",
+    "analyzeButton": "Analyser ATS",
+    "reanalyzeButton": "Ré-analyser",
+    "analyzeDescription": "Analyse IA de votre CV par rapport à l'offre d'emploi",
+    "noLlmMessage": "Configurez une clé API pour activer l'analyse IA",
+    "fallbackLabel": "correspondance mots-clés",
+    "analyzing": "Analyse de la compatibilité ATS...",
+    "keywordMatch": "Correspondance mots-clés",
+    "keywords": "Mots-clés",
+    "matched": "trouvés",
+    "present": "Présents",
+    "missing": "Manquants",
+    "priorityActions": "Actions prioritaires",
+    "scoreGood": "Excellente correspondance — devrait passer les filtres ATS",
+    "scoreOk": "Bonne correspondance — quelques améliorations recommandées",
+    "scoreLow": "Faible correspondance — améliorations significatives nécessaires (objectif >80%)",
+    "categories": {
+      "required": "Obligatoire",
+      "preferred": "Souhaitable",
+      "technical": "Technique",
+      "actionVerb": "Verbe d'action",
+      "softSkill": "Soft skill"
+    },
+    "impact": {
+      "critical": "Critique",
+      "high": "Élevé",
+      "medium": "Moyen"
+    },
+    "errors": {
+      "analysisFailedRetry": "L'analyse ATS a échoué. Veuillez réessayer.",
+      "noJobId": "Aucune offre d'emploi liée. Veuillez d'abord télécharger une offre.",
+      "uploadFailed": "Échec du téléchargement de l'offre d'emploi."
+    }
+  },
   "errors": {
     "generic": "Un problème est survenu. Veuillez réessayer.",
     "networkError": "Erreur réseau. Veuillez vérifier votre connexion.",

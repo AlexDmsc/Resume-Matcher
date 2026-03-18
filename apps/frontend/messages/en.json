@@ -811,6 +811,41 @@
       "emptyDescription": "Enable outreach message generation in Settings, then tailor a resume."
     }
   },
+  "ats": {
+    "title": "ATS Score",
+    "analyzeButton": "Analyze ATS",
+    "reanalyzeButton": "Re-analyze",
+    "analyzeDescription": "AI analysis of your resume vs. the job description",
+    "noLlmMessage": "Configure an API key to enable AI analysis",
+    "fallbackLabel": "keyword match",
+    "analyzing": "Analyzing ATS compatibility...",
+    "keywordMatch": "Keyword match",
+    "keywords": "Keywords",
+    "matched": "matched",
+    "present": "Present",
+    "missing": "Missing",
+    "priorityActions": "Priority Actions",
+    "scoreGood": "Excellent match — likely to pass ATS filters",
+    "scoreOk": "Good match — minor improvements recommended",
+    "scoreLow": "Low match — significant improvements needed (target >80%)",
+    "categories": {
+      "required": "Required",
+      "preferred": "Preferred",
+      "technical": "Technical",
+      "actionVerb": "Action Verb",
+      "softSkill": "Soft Skill"
+    },
+    "impact": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium"
+    },
+    "errors": {
+      "analysisFailedRetry": "ATS analysis failed. Please try again.",
+      "noJobId": "No job description linked. Please upload a job description first.",
+      "uploadFailed": "Failed to upload job description."
+    }
+  },
   "errors": {
     "generic": "Something went wrong. Please try again.",
     "networkError": "Network error. Please check your connection.",

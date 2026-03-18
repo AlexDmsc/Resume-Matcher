@@ -366,6 +366,36 @@ export async function retryProcessing(resumeId: string): Promise<ResumeUploadRes
   return res.json();
 }
 
+// ATS Analysis types (mirrors backend schemas/ats.py)
+export interface ATSKeywordResult {
+  keyword: string;
+  category: 'required' | 'preferred' | 'action_verb' | 'soft_skill' | 'technical';
+  found: boolean;
+}
+
+export interface ATSPriorityAction {
+  priority: number;
+  action: string;
+  impact: 'critical' | 'high' | 'medium';
+}
+
+export interface ATSAnalysisResult {
+  score: number;
+  keywords: ATSKeywordResult[];
+  priority_actions: ATSPriorityAction[];
+  analysis_language: string;
+}
+
+/** Runs AI-powered ATS analysis of a resume against a job description */
+export async function analyzeATS(resumeId: string, jobId: string): Promise<ATSAnalysisResult> {
+  const res = await apiPost('/jobs/ats-analysis', { resume_id: resumeId, job_id: jobId }, 60_000);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`ATS analysis failed with status ${res.status}: ${text}`);
+  }
+  return res.json();
+}
+
 /** Fetches the job description used to tailor a resume */
 export async function fetchJobDescription(
   resumeId: string
