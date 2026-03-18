@@ -129,6 +129,7 @@ export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
           {/* Photo - Centered, above name */}
           {personalInfo.photo && (
             <div className="flex justify-center mb-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={personalInfo.photo}
                 alt=""

@@ -50,6 +50,7 @@ export const PhotoForm: React.FC<PhotoFormProps> = ({ data, onChange }) => {
           aria-label={t('builder.photoForm.upload')}
         >
           {data.photo ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={data.photo} alt="Photo" className="w-full h-full object-cover" />
           ) : (
             <span className="font-mono text-[10px] text-gray-400 text-center px-1 leading-tight">
