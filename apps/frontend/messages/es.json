@@ -824,6 +824,7 @@
     "matched": "encontradas",
     "present": "Presentes",
     "missing": "Ausentes",
+    "reasons": "Por qué esta puntuación",
     "priorityActions": "Acciones prioritarias",
     "scoreGood": "Excelente coincidencia — debería pasar los filtros ATS",
     "scoreOk": "Buena coincidencia — se recomiendan pequeñas mejoras",

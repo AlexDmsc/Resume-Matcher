@@ -824,6 +824,7 @@
     "matched": "一致",
     "present": "一致あり",
     "missing": "不足",
+    "reasons": "このスコアの理由",
     "priorityActions": "優先アクション",
     "scoreGood": "優秀なマッチ — ATSフィルターを通過する可能性が高い",
     "scoreOk": "良好なマッチ — 軽微な改善を推奨",

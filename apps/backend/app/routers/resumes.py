@@ -1665,6 +1665,24 @@ async def get_job_description_for_resume(resume_id: str) -> dict:
     }
 
 
+@router.get("/{resume_id}/ats-result")
+async def get_ats_result(resume_id: str) -> dict:
+    """Get the stored ATS analysis result for a tailored resume.
+
+    Returns the last ATS analysis that was run and saved for this resume.
+    Returns 404 if no analysis has been run yet.
+    """
+    resume = db.get_resume(resume_id)
+    if not resume:
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    ats_result = resume.get("ats_result")
+    if not ats_result:
+        raise HTTPException(status_code=404, detail="No ATS analysis found for this resume")
+
+    return ats_result
+
+
 @router.get("/{resume_id}/cover-letter/pdf")
 async def download_cover_letter_pdf(
     resume_id: str,

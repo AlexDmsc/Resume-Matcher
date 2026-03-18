@@ -173,7 +173,15 @@ async def analyze_ats(resume_id: str, job_id: str) -> ATSAnalysisResult:
         raise RuntimeError("ATS analysis returned an unexpected response.")
 
     try:
-        return _parse_llm_response(raw)
+        result = _parse_llm_response(raw)
     except Exception as e:
         logger.error(f"Failed to parse ATS analysis response: {e} | raw={json.dumps(raw)[:500]}")
         raise RuntimeError("Failed to parse ATS analysis response.") from e
+
+    # Persist result in the resume record so it can be loaded without re-running the LLM
+    try:
+        db.update_resume(resume_id, {"ats_result": result.model_dump()})
+    except Exception as e:
+        logger.warning(f"Could not persist ATS result for resume {resume_id!r}: {e}")
+
+    return result

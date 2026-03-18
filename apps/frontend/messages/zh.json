@@ -824,6 +824,7 @@
     "matched": "已匹配",
     "present": "已包含",
     "missing": "缺失",
+    "reasons": "此分数的原因",
     "priorityActions": "优先行动",
     "scoreGood": "匹配极佳 — 很可能通过ATS筛选",
     "scoreOk": "匹配良好 — 建议少量改进",

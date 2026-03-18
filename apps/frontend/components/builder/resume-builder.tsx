@@ -39,8 +39,12 @@ import {
   generateCoverLetter,
   generateOutreachMessage,
   fetchJobDescription,
+  fetchStoredATSResult,
+  type ATSAnalysisResult,
 } from '@/lib/api/resume';
 import { JDComparisonView } from './jd-comparison-view';
+import { ATSScorePanel } from '@/components/tailor/ats-score-panel';
+import { useStatusCache } from '@/lib/context/status-cache';
 import { RegenerateWizard } from './regenerate-wizard';
 import { useRegenerateWizard } from '@/hooks/use-regenerate-wizard';
 import { useTranslations } from '@/lib/i18n';
@@ -83,6 +87,7 @@ const buildInitialData = (t: Translate): ResumeData => ({
 const ResumeBuilderContent = () => {
   const { t } = useTranslations();
   const { uiLanguage, contentLanguage } = useLanguage();
+  const { status: systemStatus } = useStatusCache();
   const [notificationDialog, setNotificationDialog] = useState<{
     title: string;
     description: string;
@@ -155,6 +160,8 @@ const ResumeBuilderContent = () => {
 
   // JD comparison state
   const [jobDescription, setJobDescription] = useState<string | null>(null);
+  const [builderJobId, setBuilderJobId] = useState<string | null>(null);
+  const [storedATSResult, setStoredATSResult] = useState<ATSAnalysisResult | null>(null);
 
   // AI Regenerate wizard
   const regenerateWizard = useRegenerateWizard({
@@ -367,9 +374,14 @@ const ResumeBuilderContent = () => {
     const loadJobDescription = async () => {
       if (isTailoredResume && resumeId) {
         try {
-          const data = await fetchJobDescription(resumeId);
+          const [jdData, atsData] = await Promise.all([
+            fetchJobDescription(resumeId),
+            fetchStoredATSResult(resumeId),
+          ]);
           if (!cancelled) {
-            setJobDescription(data.content);
+            setJobDescription(jdData.content);
+            setBuilderJobId(jdData.job_id);
+            setStoredATSResult(atsData);
           }
         } catch (err) {
           // JD might not be available for older resumes
@@ -381,6 +393,8 @@ const ResumeBuilderContent = () => {
       } else {
         // Clear job description when switching to non-tailored resume
         setJobDescription(null);
+        setBuilderJobId(null);
+        setStoredATSResult(null);
       }
     };
 
@@ -918,7 +932,27 @@ const ResumeBuilderContent = () => {
 
               {/* JD Match Comparison */}
               {activeTab === 'jd-match' && jobDescription && (
-                <JDComparisonView jobDescription={jobDescription} resumeData={resumeData} />
+                <div className="flex flex-col h-full">
+                  {resumeId && builderJobId && (
+                    <div className="p-4 border-b border-black shrink-0">
+                      <ATSScorePanel
+                        resumeId={resumeId}
+                        jobId={builderJobId}
+                        fallbackJobDescription={jobDescription}
+                        fallbackResumeData={resumeData}
+                        isLlmConfigured={!!systemStatus?.llm_configured}
+                        onAnalysisComplete={(result) => setStoredATSResult(result)}
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1 min-h-0">
+                    <JDComparisonView
+                      jobDescription={jobDescription}
+                      resumeData={resumeData}
+                      atsResult={storedATSResult}
+                    />
+                  </div>
+                </div>
               )}
             </div>
           </div>

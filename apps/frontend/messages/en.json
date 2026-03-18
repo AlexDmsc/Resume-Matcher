@@ -824,6 +824,7 @@
     "matched": "matched",
     "present": "Present",
     "missing": "Missing",
+    "reasons": "Why this score",
     "priorityActions": "Priority Actions",
     "scoreGood": "Excellent match — likely to pass ATS filters",
     "scoreOk": "Good match — minor improvements recommended",

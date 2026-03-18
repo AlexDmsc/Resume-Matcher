@@ -386,6 +386,14 @@ export interface ATSAnalysisResult {
   analysis_language: string;
 }
 
+/** Fetches the stored ATS analysis result for a resume (returns null if none exists) */
+export async function fetchStoredATSResult(resumeId: string): Promise<ATSAnalysisResult | null> {
+  const res = await apiFetch(`/resumes/${encodeURIComponent(resumeId)}/ats-result`);
+  if (res.status === 404) return null;
+  if (!res.ok) return null;
+  return res.json();
+}
+
 /** Runs AI-powered ATS analysis of a resume against a job description */
 export async function analyzeATS(resumeId: string, jobId: string): Promise<ATSAnalysisResult> {
   const res = await apiPost('/jobs/ats-analysis', { resume_id: resumeId, job_id: jobId }, 60_000);

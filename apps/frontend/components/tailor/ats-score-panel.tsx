@@ -14,6 +14,8 @@ interface ATSScorePanelProps {
   jobId: string | null;
   /** Called when jobId is null — should upload the JD and return the new jobId */
   onGetJobId?: () => Promise<string | null>;
+  /** Called after a successful analysis so parent can update its stored result */
+  onAnalysisComplete?: (result: ATSAnalysisResult) => void;
   /** Fallback: resume data + JD text for client-side keyword scoring when LLM unavailable */
   fallbackResumeData?: ResumeData | null;
   fallbackJobDescription?: string;
@@ -24,6 +26,7 @@ export function ATSScorePanel({
   resumeId,
   jobId,
   onGetJobId,
+  onAnalysisComplete,
   fallbackResumeData,
   fallbackJobDescription,
   isLlmConfigured,
@@ -66,6 +69,7 @@ export function ATSScorePanel({
       }
       const data = await analyzeATS(resumeId, resolvedJobId);
       setResult(data);
+      onAnalysisComplete?.(data);
     } catch (err) {
       console.error(err);
       setError(t('ats.errors.analysisFailedRetry'));

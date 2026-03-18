@@ -824,6 +824,7 @@
     "matched": "trouvés",
     "present": "Présents",
     "missing": "Manquants",
+    "reasons": "Pourquoi cette note",
     "priorityActions": "Actions prioritaires",
     "scoreGood": "Excellente correspondance — devrait passer les filtres ATS",
     "scoreOk": "Bonne correspondance — quelques améliorations recommandées",
