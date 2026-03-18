@@ -126,6 +126,17 @@ export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
           className={`text-center ${baseStyles['resume-header']} border-b`}
           style={{ borderColor: 'var(--resume-border-primary)' }}
         >
+          {/* Photo - Centered, above name */}
+          {personalInfo.photo && (
+            <div className="flex justify-center mb-3">
+              <img
+                src={personalInfo.photo}
+                alt=""
+                className="w-20 h-20 object-cover border border-black"
+              />
+            </div>
+          )}
+
           {/* Name - Centered */}
           {personalInfo.name && (
             <h1 className={`${baseStyles['resume-name']} tracking-tight uppercase mb-1`}>

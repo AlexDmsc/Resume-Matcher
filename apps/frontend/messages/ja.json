@@ -427,6 +427,13 @@
         "github": "github.com/taro"
       }
     },
+    "photoForm": {
+      "clickToUpload": "クリックしてアップロード",
+      "upload": "写真を追加",
+      "change": "写真を変更",
+      "remove": "削除",
+      "hint": "JPG, PNG, WebP · 最大 5 MB"
+    },
     "leftPanel": {
       "editorPanel": "編集パネル",
       "coverLetterEditor": "カバーレター編集",
@@ -737,7 +744,8 @@
       "location": "所在地",
       "website": "ウェブサイト",
       "linkedin": "LinkedIn",
-      "github": "GitHub"
+      "github": "GitHub",
+      "photo": "写真"
     },
     "sections": {
       "personalInfo": "個人情報",

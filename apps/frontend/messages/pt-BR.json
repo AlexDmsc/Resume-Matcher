@@ -427,6 +427,13 @@
         "github": "github.com/joao"
       }
     },
+    "photoForm": {
+      "clickToUpload": "Clique para enviar",
+      "upload": "Adicionar foto",
+      "change": "Alterar foto",
+      "remove": "Remover",
+      "hint": "JPG, PNG, WebP · máx 5 MB"
+    },
     "leftPanel": {
       "editorPanel": "Painel do Editor",
       "coverLetterEditor": "Editor de Carta de Apresentação",
@@ -737,7 +744,8 @@
       "location": "Localização",
       "website": "Website",
       "linkedin": "LinkedIn",
-      "github": "GitHub"
+      "github": "GitHub",
+      "photo": "Foto"
     },
     "sections": {
       "personalInfo": "Informações Pessoais",

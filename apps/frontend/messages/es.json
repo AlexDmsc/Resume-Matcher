@@ -427,6 +427,13 @@
         "github": "github.com/juan"
       }
     },
+    "photoForm": {
+      "clickToUpload": "Clic para subir",
+      "upload": "Subir foto",
+      "change": "Cambiar foto",
+      "remove": "Eliminar",
+      "hint": "JPG, PNG, WebP · máx 5 MB"
+    },
     "leftPanel": {
       "editorPanel": "Panel de edición",
       "coverLetterEditor": "Editor de carta",
@@ -737,7 +744,8 @@
       "location": "Ubicación",
       "website": "Sitio Web",
       "linkedin": "LinkedIn",
-      "github": "GitHub"
+      "github": "GitHub",
+      "photo": "Foto"
     },
     "sections": {
       "personalInfo": "Información Personal",

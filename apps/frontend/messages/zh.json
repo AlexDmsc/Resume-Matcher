@@ -427,6 +427,13 @@
         "github": "github.com/zhangsan"
       }
     },
+    "photoForm": {
+      "clickToUpload": "点击上传",
+      "upload": "上传照片",
+      "change": "更换照片",
+      "remove": "删除",
+      "hint": "JPG, PNG, WebP · 最大 5 MB"
+    },
     "leftPanel": {
       "editorPanel": "编辑面板",
       "coverLetterEditor": "求职信编辑",
@@ -737,7 +744,8 @@
       "location": "所在地",
       "website": "个人网站",
       "linkedin": "领英",
-      "github": "GitHub"
+      "github": "GitHub",
+      "photo": "照片"
     },
     "sections": {
       "personalInfo": "个人信息",

@@ -427,6 +427,13 @@
         "github": "github.com/jean"
       }
     },
+    "photoForm": {
+      "clickToUpload": "Cliquer pour uploader",
+      "upload": "Ajouter une photo",
+      "change": "Changer la photo",
+      "remove": "Supprimer",
+      "hint": "JPG, PNG, WebP · max 5 Mo"
+    },
     "leftPanel": {
       "editorPanel": "Panneau d'édition",
       "coverLetterEditor": "Éditeur de lettre de motivation",
@@ -737,7 +744,8 @@
       "location": "Lieu",
       "website": "Site web",
       "linkedin": "LinkedIn",
-      "github": "GitHub"
+      "github": "GitHub",
+      "photo": "Photo"
     },
     "sections": {
       "personalInfo": "Informations personnelles",
